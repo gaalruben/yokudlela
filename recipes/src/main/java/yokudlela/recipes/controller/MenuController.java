@@ -31,7 +31,7 @@ public class MenuController {
             content = { @Content(mediaType = "application/json",
             array = @ArraySchema(schema = @Schema(implementation = Product.class))) }),
     })
-    @Operation(summary = "Azon termékek lekérdezése, amelyek a megadott mértékegységet (KG, PIECE) használják és a paraméterként átadott mennyiségnél (pl. 100) kevesebb van belőlük raktáron.")
+    @Operation(summary = "Azon termékek lekérdezése, amelyek a megadott mértékegységet (G, KG, PCS, L, ML) használják és a paraméterként átadott mennyiségnél (pl. 100) kevesebb van belőlük raktáron.")
     @GetMapping(path = "/getLowQuantityProducts", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Product> getLowQuantityProducts(
             @Parameter(description = "Maximális mennyiség", required = true) @RequestParam(name = "quantity", required = true)double quantity,

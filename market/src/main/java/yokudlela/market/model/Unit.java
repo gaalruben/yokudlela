@@ -1,4 +1,4 @@
-package yokudlela.recipes.model;
+package yokudlela.market.model;
 
 public enum Unit {
     PCS,
