@@ -1,5 +1,6 @@
 package yokudlela.recipes.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,11 +18,14 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Recept neve")
     private String name;
 
+    @Schema(description = "Összetevők")
     @OneToMany(mappedBy = "recipe")
-    private List<Product> ingredients;
+    private List<Ingredient> ingredients;
 
+    @Schema(description = "Mely ételeket készítik a recept alapján")
     @OneToMany(mappedBy = "recipe")
     private List<MenuItem> menuItems;
 
