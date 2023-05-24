@@ -13,28 +13,25 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "menu")
 @Schema(description = "Menü")
+@Entity
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "menu")
+    String name;
+
+    @ManyToOne
     @Schema(description = "Menü csoportja")
     MenuGroup group;
 
     @Schema(description = "A hét mely napján elérhető")
     DayOfWeek dayAvailable;
 
-    @Schema(description = "Ár")
-    int price;
-
     @Schema(description = "Ételek")
-    @OneToMany(mappedBy = "menu")
+    @ManyToMany
     List<MenuItem> menuItems;
-
-    public Menu(){
-        menuItems = new ArrayList<>();
-    }
 }

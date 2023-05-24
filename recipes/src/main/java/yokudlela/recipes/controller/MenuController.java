@@ -31,12 +31,14 @@ public class MenuController {
             content = { @Content(mediaType = "application/json",
             array = @ArraySchema(schema = @Schema(implementation = Product.class))) }),
     })
-    @Operation(summary = "Azon termékek lekérdezése, amelyek a megadott mértékegységet használják és a paraméterként átadott mennyiségnél kevesebb van belőlük raktáron.")
+    @Operation(summary = "Azon termékek lekérdezése, amelyek a megadott mértékegységet (KG, PIECE) használják és a paraméterként átadott mennyiségnél (pl. 100) kevesebb van belőlük raktáron.")
     @GetMapping(path = "/getLowQuantityProducts", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Product> getLowQuantityProducts(
             @Parameter(description = "Maximális mennyiség", required = true) @RequestParam(name = "quantity", required = true)double quantity,
             @Parameter(description = "Mértékegység", required = true) @RequestParam(name = "unit", required = true)String unit){
-        return menuService.getLowQuantityProducts(quantity, Unit.valueOf(unit));
+
+        List<Product> products = menuService.getLowQuantityProducts(quantity, Unit.valueOf(unit));
+        return  products;
     }
 
     @ApiResponses(value = {
@@ -47,7 +49,8 @@ public class MenuController {
     @Operation(summary = "Azon receptek lekérdezése, amelyekhez VAN elegendő alapanyag raktáron.")
     @GetMapping(path = "/getRecipesWithEnoughResources", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Recipe> getRecipesWithEnoughResources() {
-        return menuService.getRecipesWithEnoughResources();
+        List<Recipe> recipes = menuService.getRecipesWithEnoughResources();
+        return recipes;
     }
 
     @ApiResponses(value = {
@@ -58,7 +61,8 @@ public class MenuController {
     @Operation(summary = "Azon receptek lekérdezése, amelyekhez NINCS elegendő alapanyag raktáron.")
     @GetMapping(path = "/getRecipesWithNotEnoughResources", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Recipe> getRecipesWithNotEnoughResources(){
-        return menuService.getRecipesWithNotEnoughResources();
+        List<Recipe> recipes = menuService.getRecipesWithNotEnoughResources();
+        return recipes;
     }
 
     @ApiResponses(value = {
@@ -66,11 +70,12 @@ public class MenuController {
             content = { @Content(mediaType = "application/json",
             array = @ArraySchema(schema = @Schema(implementation = Menu.class))) }),
     })
-    @Operation(summary = "Azon menük lekérdezése, amelyek a paraméterként átadott csoportazonosítóval rendelkeznek.")
+    @Operation(summary = "Azon menük lekérdezése, amelyek a paraméterként átadott csoportazonosítóval rendelkeznek. (pl. 300, 303 stb)")
     @GetMapping(path = "/getMenusByGroupId", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Menu> getMenusByGroupId(
             @Parameter(description = "Csoportazonosító", required = true) @RequestParam(name = "groupId", required = true)Long groupId) {
-        return getMenusByGroupId(groupId);
+        List<Menu> menus = menuService.getMenusByGroupId(groupId);
+        return menus;
     }
 
     @ApiResponses(value = {
@@ -78,11 +83,13 @@ public class MenuController {
             content = { @Content(mediaType = "application/json",
             array = @ArraySchema(schema = @Schema(implementation = Menu.class))) }),
     })
-    @Operation(summary = "Azon menük lekérdezése, amelyek a paraméterként átadott napon (a hét napjai közül) elérhetőek.")
+    @Operation(summary = "Azon menük lekérdezése, amelyek a paraméterként átadott napon (a hét napjai közül) elérhetőek. pl. MONDAY")
     @GetMapping(path = "/getMenusByDayOfWeek", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Menu> getMenusByDayOfWeek(
-            @Parameter(description = "A hét egy napja angolul", required = true) @RequestParam(name = "groupId", required = true)String dayOfWeek){
-        return menuService.getMenusByDayOfWeek(DayOfWeek.valueOf(dayOfWeek));
+            @Parameter(description = "A hét egy napja angolul", required = true) @RequestParam(name = "dayOfWeek", required = true)String dayOfWeek){
+
+        List<Menu> menus = menuService.getMenusByDayOfWeek(DayOfWeek.valueOf(dayOfWeek));
+        return menus;
     }
 
 
@@ -92,8 +99,9 @@ public class MenuController {
             schema = @Schema(implementation = Menu.class)) }),
     })
     @Operation(summary = "Legtöbbször rendelt étel lekérdezése.")
-    @GetMapping(path = "/getMenusByDayOfWeek", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/getMostFrequentlyOrderedMenuItem", produces = MediaType.APPLICATION_JSON_VALUE)
     public MenuItem getMostFrequentlyOrderedMenuItem(){
-        return menuService.getMostFrequentlyOrderedMenuItem();
+        MenuItem menuItem = menuService.getMostFrequentlyOrderedMenuItem();
+        return menuItem;
     }
 }

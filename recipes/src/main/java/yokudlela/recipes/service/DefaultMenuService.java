@@ -47,27 +47,27 @@ public class DefaultMenuService implements MenuService{
     @Override
     public List<Recipe> getRecipesWithEnoughResources() {
         List<Recipe> recipes = StreamSupport.stream(recipeRepository.findAll().spliterator(), false).filter(recipe ->
-                recipe.getIngredients().stream().allMatch(i -> i.getQuantity() >= i.getProduct().getQuantity())).collect(Collectors.toList());
+                recipe.getIngredients().stream().allMatch(i -> i.getQuantity() <= i.getProduct().getQuantity())).collect(Collectors.toList());
         return recipes;
     }
 
     @Override
     public List<Recipe> getRecipesWithNotEnoughResources() {
         List<Recipe> recipes = StreamSupport.stream(recipeRepository.findAll().spliterator(), false).filter(
-                Predicate.not(recipe -> recipe.getIngredients().stream().allMatch(i -> i.getQuantity() >= i.getProduct().getQuantity())))
+                Predicate.not(recipe -> recipe.getIngredients().stream().allMatch(i -> i.getQuantity() <= i.getProduct().getQuantity())))
                 .collect(Collectors.toList());
         return recipes;
     }
 
     @Override
     public List<Menu> getMenusByGroupId(Long groupId) {
-        List<Menu> menus = StreamSupport.stream(menuRepository.findAll().spliterator(), false).filter(menu -> menu.getGroup().getId() == groupId).collect(Collectors.toList());
+        List<Menu> menus = StreamSupport.stream(menuRepository.findAll().spliterator(), false).filter(menu -> menu.getGroup().getId().equals(groupId)).collect(Collectors.toList());
         return menus;
     }
 
     @Override
     public List<Menu> getMenusByDayOfWeek(DayOfWeek dayOfWeek) {
-        List<Menu> menus = StreamSupport.stream(menuRepository.findAll().spliterator(), false).filter(menu -> menu.getDayAvailable() == dayOfWeek).collect(Collectors.toList());
+        List<Menu> menus = StreamSupport.stream(menuRepository.findAll().spliterator(), false).filter(menu -> menu.getDayAvailable().equals(dayOfWeek)).collect(Collectors.toList());
         return menus;
     }
 

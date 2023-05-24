@@ -12,7 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "recipe")
+@Entity
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +24,10 @@ public class Recipe {
     private String name;
 
     @Schema(description = "Összetevők")
-    @OneToMany(mappedBy = "recipe")
+    @ManyToMany
     private List<Ingredient> ingredients;
 
     @Schema(description = "Mely ételeket készítik a recept alapján")
-    @OneToMany(mappedBy = "recipe")
+    @ManyToMany
     private List<MenuItem> menuItems;
-
-    public Recipe(){
-        ingredients = new ArrayList<>();
-        menuItems = new ArrayList<>();
-    }
 }
