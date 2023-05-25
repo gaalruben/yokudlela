@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import yokudlela.market.model.Consumer;
+import yokudlela.market.model.Product;
+import yokudlela.market.model.Supplier;
 import yokudlela.market.model.SupplierProduct;
 import yokudlela.market.service.MarketService;
 
@@ -69,6 +72,44 @@ public class MarketController {
             @Parameter(description = "Beszállító termék azonosítója", required = true) @RequestParam(name = "supplierProductId", required = true)Long supplierProductId,
             @Parameter(description = "Feltölteni kívánt mennyiség", required = true) @RequestParam(name = "quantity", required = true)double quantity){
             marketService.restockProduct(supplierProductId, quantity);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sikeres felvitel",
+            content = { @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Product.class)) })
+    })
+    @Operation(summary = "Új termék felvitele")
+    @PostMapping(path = "/addProduct", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Product addProduct(@Parameter(description = "Az új termék",required = true) @RequestBody(required = true) Product product){
+        marketService.createProduct(product);
+        return product;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sikeres felvitel",
+            content = { @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Consumer.class)) })
+    })
+    @Operation(summary = "Új partner felvitele")
+    @PostMapping(path = "/addConsumer", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Consumer addConsumer(@Parameter(description = "Partner neve",required = true) @RequestParam(required = true) String name,
+                                @Parameter(description = "Partner elérhetősége",required = true) @RequestParam(required = true) String contact){
+        Consumer consumer = Consumer.builder().name(name).contact(name).build();
+        marketService.createConsumer(consumer);
+        return consumer;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sikeres felvitel",
+            content = { @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Supplier.class)) })
+    })
+    @Operation(summary = "Új beszállító felvitele")
+    @PostMapping(path = "/addSupplier", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Supplier addConsumer(@Parameter(description = "Az új partner",required = true) @RequestBody(required = true) Supplier supplier){
+        marketService.createSupplier(supplier);
+        return supplier;
     }
 
 }
