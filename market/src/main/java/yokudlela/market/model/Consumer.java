@@ -1,9 +1,11 @@
 package yokudlela.market.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode
 @Builder
@@ -19,6 +21,13 @@ public class Consumer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Fogyasztó neve")
     private String name;
+
+    @Schema(description = "Fogyasztó elérhetősége (e-mail cím)")
     private String contact;
+
+    @OneToMany
+    @JsonBackReference
+    private List<ConsumerProduct> products;
 }
