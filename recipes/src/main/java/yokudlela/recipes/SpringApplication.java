@@ -29,14 +29,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         description = "KeyCloak Yokudlela",
         in = SecuritySchemeIn.HEADER)*/
 
-/*
-@SecurityScheme(
-        type = SecuritySchemeType.OPENIDCONNECT,
-        name = "openid",
-        description = "KeyCloak Yokudlela",
-        openIdConnectUrl = "http://localhost:6080/auth/realms/yokudlela/.well-known/openid-configuration"
-)*/
-@SecurityScheme(
+/*@SecurityScheme(
         type = SecuritySchemeType.OAUTH2,
         name = "oauth2",
         description = "KeyCloak Yokudlela",
@@ -47,6 +40,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
                         + "&response_type=code"
                         + "&scope=openid")
         )
+)*/
+
+@SecurityScheme(
+        type = SecuritySchemeType.OPENIDCONNECT,
+        name = "openid",
+        description = "KeyCloak Yokudlela",
+        openIdConnectUrl = "http://localhost:6080/auth/realms/yokudlela/.well-known/openid-configuration"
 )
 @OpenAPIDefinition(
         servers = {

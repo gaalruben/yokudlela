@@ -12,6 +12,19 @@ services:
         condition: service_healthy
     links:
         - db
+
+  market:
+    image: gaalruben/market
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/service_recipe?allowPublicKeyRetrieval=true&useSSL=false
+      KEYCLOAK_AUTH_SERVER_URL: http://localhost:6080/auth
+    ports:
+      - 8060:8060
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
   db:
     image: mysql
     environment:
