@@ -20,6 +20,22 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
+
+
+/*@SecurityScheme(
+        type = SecuritySchemeType.APIKEY,
+        name = "apikey",
+        paramName = "Authorization",
+        description = "KeyCloak Yokudlela",
+        in = SecuritySchemeIn.HEADER)*/
+
+/*
+@SecurityScheme(
+        type = SecuritySchemeType.OPENIDCONNECT,
+        name = "openid",
+        description = "KeyCloak Yokudlela",
+        openIdConnectUrl = "http://localhost:6080/auth/realms/yokudlela/.well-known/openid-configuration"
+)*/
 @SecurityScheme(
         type = SecuritySchemeType.OAUTH2,
         name = "oauth2",
@@ -32,22 +48,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
                         + "&scope=openid")
         )
 )
-
-@SecurityScheme(
-        type = SecuritySchemeType.APIKEY,
-        name = "apikey",
-        paramName = "Authorization",
-        description = "KeyCloak Yokudlela",
-        in = SecuritySchemeIn.HEADER)
-
-
-@SecurityScheme(
-        type = SecuritySchemeType.OPENIDCONNECT,
-        name = "openid",
-        description = "KeyCloak Yokudlela",
-        openIdConnectUrl = "http://localhost:6080/auth/realms/yokudlela/.well-known/openid-configuration"
-)
-
 @OpenAPIDefinition(
         servers = {
                 @Server(url = "http://localhost:8080/recipe", description = "local dev")},

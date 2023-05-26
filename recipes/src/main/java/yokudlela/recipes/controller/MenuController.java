@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import yokudlela.recipes.model.*;
 import yokudlela.recipes.service.MenuService;
 
@@ -103,5 +100,20 @@ public class MenuController {
     public MenuItem getMostFrequentlyOrderedMenuItem(){
         MenuItem menuItem = menuService.getMostFrequentlyOrderedMenuItem();
         return menuItem;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sikeres felvitel",
+            content = { @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Product.class)) })
+    })
+    @Operation(summary = "Új termék felvitele")
+    @PostMapping(path = "/addProduct", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Product addConsumer(@Parameter(description = "Termék neve",required = true) @RequestParam(required = true) String name,
+                                @Parameter(description = "Mennyiség",required = true) @RequestParam(required = true) double quantity,
+                               @Parameter(description = "Mértékegység",required = true) @RequestParam(required = true) String unit){
+        Product product = Product.builder().name(name).quantity(quantity).unit(Unit.valueOf(unit)).build();
+        menuService.createProduct(product);
+        return product;
     }
 }

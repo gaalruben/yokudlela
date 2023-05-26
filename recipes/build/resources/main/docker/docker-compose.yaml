@@ -3,7 +3,7 @@ services:
   recipe:
     image: gaalruben/recipe
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/service_recipe?useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/service_recipe?allowPublicKeyRetrieval=true&useSSL=false
       KEYCLOAK_AUTH_SERVER_URL: http://localhost:6080/auth
     ports:
       - 8080:8080
