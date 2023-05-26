@@ -80,7 +80,7 @@ public class MarketController {
             schema = @Schema(implementation = Product.class)) })
     })
     @Operation(summary = "Új termék felvitele")
-    @PostMapping(path = "/addProduct", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/add/product", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product addProduct(@Parameter(description = "Az új termék",required = true) @RequestBody(required = true) Product product){
         marketService.createProduct(product);
         return product;
@@ -92,7 +92,7 @@ public class MarketController {
             schema = @Schema(implementation = Consumer.class)) })
     })
     @Operation(summary = "Új partner felvitele")
-    @PostMapping(path = "/addConsumer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/add/consumer", produces = MediaType.APPLICATION_JSON_VALUE)
     public Consumer addConsumer(@Parameter(description = "Partner neve",required = true) @RequestParam(required = true) String name,
                                 @Parameter(description = "Partner elérhetősége",required = true) @RequestParam(required = true) String contact){
         Consumer consumer = Consumer.builder().name(name).contact(name).build();
@@ -106,7 +106,7 @@ public class MarketController {
             schema = @Schema(implementation = Supplier.class)) })
     })
     @Operation(summary = "Új beszállító felvitele")
-    @PostMapping(path = "/addSupplier", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/add/supplier", produces = MediaType.APPLICATION_JSON_VALUE)
     public Supplier addConsumer(@Parameter(description = "Az új partner",required = true) @RequestBody(required = true) Supplier supplier){
         marketService.createSupplier(supplier);
         return supplier;
