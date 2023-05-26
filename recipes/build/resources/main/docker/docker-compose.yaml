@@ -1,0 +1,71 @@
+version: '3'
+services:
+  recipe:
+    image: gaalruben/recipe
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/service_recipe?useSSL=false
+      KEYCLOAK_AUTH_SERVER_URL: http://localhost:6080/auth
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+        - db
+  db:
+    image: mysql
+    environment:
+      PROXY_ADDRESS_FORWARDING: 'true'
+      MYSQL_ROOT_PASSWORD: yokudlela
+      #MYSQL_DATABASE: keycloak
+      #MYSQL_USER: yokudlela
+      #MYSQL_PASSWORD: yokudlela
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    restart: unless-stopped #on-failure
+    volumes:
+      - ./init-db/iam.sql:/docker-entrypoint-initdb.d/1.sql:ro
+      - ./init-db/recipe-service.sql:/docker-entrypoint-initdb.d/2.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql --user=root --password=$$MYSQL_ROOT_PASSWORD -e 'SHOW DATABASES;' || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
+
+  keycloak:
+    image: jboss/keycloak:12.0.4
+    restart: unless-stopped
+    ports:
+      - 6080:8080
+    expose:
+      - 6080
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: yokudlela
+      DB_VENDOR: mysql
+      DB_USER: iam
+      DB_PASSWORD: iam
+      DB_ADDR: db
+      DB_DATABASE: iam
+      DB_PORT: 3306
+      KEYCLOAK_IMPORT: /tmp/example-realm.json
+    volumes:
+      - ./realm-export.json:/tmp/example-realm.json
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+
+#volumes:
+#  data-volume:
+#  keycloak-volume:
