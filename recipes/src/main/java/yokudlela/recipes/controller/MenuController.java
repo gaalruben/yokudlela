@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -107,7 +108,7 @@ public class MenuController {
             content = { @Content(mediaType = "application/json",
             schema = @Schema(implementation = Product.class)) })
     })
-    @Operation(summary = "Új termék felvitele")
+    @Operation(summary = "Új termék felvitele", security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
     @PostMapping(path = "/add/product", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product addConsumer(@Parameter(description = "Termék neve",required = true) @RequestParam(required = true) String name,
                                 @Parameter(description = "Mennyiség",required = true) @RequestParam(required = true) double quantity,

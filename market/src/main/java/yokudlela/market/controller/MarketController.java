@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,8 @@ public class MarketController {
             @ApiResponse(responseCode = "200", description = "Sikeres megrendelés",
             content = { @Content(mediaType = "application/json")})
     })
-    @Operation(summary = "Fogyasztóként termék megrendelése beszállítótól pl. consumerId = 100, supplierProductId = 500.")
+    @Operation(summary = "Fogyasztóként termék megrendelése beszállítótól pl. consumerId = 100, supplierProductId = 500.",
+            security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
     @PostMapping(path = "/orderProductBySupplierProductId", produces = MediaType.APPLICATION_JSON_VALUE)
     void orderProductBySupplierProductId(
             @Parameter(description = "Fogyasztó azonosítója, aki rendelni szeretne", required = true) @RequestParam(name = "consumerId", required = true)Long consumerId,
@@ -79,7 +81,7 @@ public class MarketController {
             content = { @Content(mediaType = "application/json",
             schema = @Schema(implementation = Product.class)) })
     })
-    @Operation(summary = "Új termék felvitele")
+    @Operation(summary = "Új termék felvitele", security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
     @PostMapping(path = "/add/product", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product addProduct(@Parameter(description = "Az új termék",required = true) @RequestBody(required = true) Product product){
         marketService.createProduct(product);
@@ -91,7 +93,7 @@ public class MarketController {
             content = { @Content(mediaType = "application/json",
             schema = @Schema(implementation = Consumer.class)) })
     })
-    @Operation(summary = "Új partner felvitele")
+    @Operation(summary = "Új partner felvitele", security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
     @PostMapping(path = "/add/consumer", produces = MediaType.APPLICATION_JSON_VALUE)
     public Consumer addConsumer(@Parameter(description = "Partner neve",required = true) @RequestParam(required = true) String name,
                                 @Parameter(description = "Partner elérhetősége",required = true) @RequestParam(required = true) String contact){
