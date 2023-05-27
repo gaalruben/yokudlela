@@ -9,7 +9,7 @@ info:
   version: v1
 servers:
 - description: local dev
-  url: http://localhost:8080/recipe
+  url: http://recipe:8080/recipe
 paths:
   /menu/add/product:
     post:

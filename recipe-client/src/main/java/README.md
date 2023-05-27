@@ -90,7 +90,7 @@ import yokudlela.recipe.java.clients.api.MenuControllerApi;
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("http://localhost:8080/recipe");
+    defaultClient.setBasePath("http://recipe:8080/recipe");
     
     MenuControllerApi apiInstance = new MenuControllerApi(defaultClient);
     String name = "name_example"; // String | Term�k neve

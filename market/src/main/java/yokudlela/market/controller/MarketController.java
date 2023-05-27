@@ -20,6 +20,7 @@ import yokudlela.recipe.java.clients.invoker.Configuration;
 import yokudlela.recipe.java.clients.model.Recipe;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -38,14 +39,13 @@ public class MarketController {
     })
     @Operation(summary = "MENÜ APIból hívva: Azon receptek lekérdezése, amelyekhez NINCS elegendő alapanyag raktáron.")
     @GetMapping(value = "/getRecipesWithNotEnoughResources", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Recipe> getRecipesWithNotEnoughResources(HttpServletRequest request) throws ApiException {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath("http://recipe:8080/recipe");
+    public List<Recipe> getRecipesWithNotEnoughResources(HttpServletRequest request) throws ApiException, MalformedURLException {
+        MenuControllerApi api = menuControllerService.getClientInstance();
+        //api.getApiClient().setBasePath("http://recipe:8080/recipe");
 
-        MenuControllerApi api = new MenuControllerApi(defaultClient);
         System.out.println("----- /getRecipesWithNotEnoughResources CALLED -----");
         System.out.println("----- BasePath: " + api.getApiClient().getBasePath()  + "-----");
-        //MenuControllerApi api = this.menuControllerService.getClientInstance();
+
         List<Recipe> recipes = api.getRecipesWithNotEnoughResources();
         return recipes;
     }
@@ -59,11 +59,12 @@ public class MarketController {
     @GetMapping(value = "/getLowQuantityProducts", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<yokudlela.recipe.java.clients.model.Product> getLowQuantityProducts(
             @Parameter(description = "Maximális mennyiség", required = true) @RequestParam(name = "quantity", required = true)double quantity,
-            @Parameter(description = "Mértékegység", required = true) @RequestParam(name = "unit", required = true)String unit) throws ApiException {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath("http://recipe:8080/recipe");
-        MenuControllerApi api = new MenuControllerApi(defaultClient);
-        //MenuControllerApi api = this.menuControllerService.getClientInstance();
+            @Parameter(description = "Mértékegység", required = true) @RequestParam(name = "unit", required = true)String unit) throws ApiException, MalformedURLException {
+        MenuControllerApi api = menuControllerService.getClientInstance();
+
+        System.out.println("----- /getLowQuantityProducts CALLED -----");
+        System.out.println("----- BasePath: " + api.getApiClient().getBasePath()  + "-----");
+
         List<yokudlela.recipe.java.clients.model.Product> products = api.getLowQuantityProducts(quantity, unit);
         return products;
     }

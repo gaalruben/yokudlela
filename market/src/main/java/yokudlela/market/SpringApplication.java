@@ -23,12 +23,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 )
 @OpenAPIDefinition(
         servers = {
-                @Server(url = "http://localhost:8060/market", description = "local dev")},
+                @Server(url = "http://localhost:8060/market", description = "local dev"),
+                @Server(url = "http://market:8060/market", description = "docker")},
 
         info = @Info(
-                title = "Yokudlela Recipes/Menus API",
+                title = "Yokudlela Market API",
                 version = "v1",
-                description = "description = \"Yokudlela Recipes/Tables API for Graphical User Interface .",
+                description = "description = \"Yokudlela Market API for Graphical User Interface .",
                 contact = @Contact(name = "Gaál Ruben", email = "gaalruben02@gmail.com")))
 @Configuration
 @EnableWebMvc

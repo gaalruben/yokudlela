@@ -60,10 +60,10 @@ import yokudlela.recipe.java.clients.invoker.auth.ApiKeyAuth;
  */
 public class ApiClient {
 
-    private String basePath = "http://localhost:8080/recipe";
+    private String basePath = "http://recipe:8080/recipe";
     protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>(Arrays.asList(
     new ServerConfiguration(
-      "http://localhost:8080/recipe",
+      "http://recipe:8080/recipe",
       "local dev",
       new HashMap<String, ServerVariable>()
     )
