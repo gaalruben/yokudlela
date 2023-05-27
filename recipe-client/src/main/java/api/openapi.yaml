@@ -1,0 +1,439 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: gaalruben02@gmail.com
+    name: Ga�l Ruben
+  description: description = "Yokudlela Recipes/Tables API for Graphical User Interface
+    .
+  title: Yokudlela Recipes/Menus API
+  version: v1
+servers:
+- description: local dev
+  url: http://localhost:8080/recipe
+paths:
+  /menu/add/product:
+    post:
+      operationId: addConsumer
+      parameters:
+      - description: Term�k neve
+        explode: true
+        in: query
+        name: name
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Mennyis�g
+        explode: true
+        in: query
+        name: quantity
+        required: true
+        schema:
+          format: double
+          type: number
+        style: form
+      - description: M�rt�kegys�g
+        explode: true
+        in: query
+        name: unit
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: Sikeres felvitel
+      security:
+      - openid:
+        - recipe
+      summary: �j term�k felvitele
+      tags:
+      - menu-controller
+      x-accepts: application/json
+  /menu/getRecipesWithNotEnoughResources:
+    get:
+      operationId: getRecipesWithNotEnoughResources
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Recipe'
+                type: array
+          description: Sikeres lek�rdez�s
+      summary: "Azon receptek lek�rdez�se, amelyekhez NINCS elegend? alapanyag rakt�\
+        ron."
+      tags:
+      - menu-controller
+      x-accepts: application/json
+  /menu/getRecipesWithEnoughResources:
+    get:
+      operationId: getRecipesWithEnoughResources
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Recipe'
+                type: array
+          description: Sikeres lek�rdez�s
+      summary: "Azon receptek lek�rdez�se, amelyekhez VAN elegend? alapanyag rakt�\
+        ron."
+      tags:
+      - menu-controller
+      x-accepts: application/json
+  /menu/getMostFrequentlyOrderedMenuItem:
+    get:
+      operationId: getMostFrequentlyOrderedMenuItem
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+          description: Sikeres lek�rdez�s
+      summary: Legt�bbsz�r rendelt �tel lek�rdez�se.
+      tags:
+      - menu-controller
+      x-accepts: application/json
+  /menu/getMenusByGroupId:
+    get:
+      operationId: getMenusByGroupId
+      parameters:
+      - description: Csoportazonos�t�
+        explode: true
+        in: query
+        name: groupId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Menu'
+                type: array
+          description: Sikeres lek�rdez�s
+      summary: "Azon men�k lek�rdez�se, amelyek a param�terk�nt �tadott csoportazonos�\
+        t�val rendelkeznek. (pl. 300, 303 stb)"
+      tags:
+      - menu-controller
+      x-accepts: application/json
+  /menu/getMenusByDayOfWeek:
+    get:
+      operationId: getMenusByDayOfWeek
+      parameters:
+      - description: A h�t egy napja angolul
+        explode: true
+        in: query
+        name: dayOfWeek
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Menu'
+                type: array
+          description: Sikeres lek�rdez�s
+      summary: "Azon men�k lek�rdez�se, amelyek a param�terk�nt �tadott napon (a h�\
+        t napjai k�z�l) el�rhet?ek. pl. MONDAY"
+      tags:
+      - menu-controller
+      x-accepts: application/json
+  /menu/getLowQuantityProducts:
+    get:
+      operationId: getLowQuantityProducts
+      parameters:
+      - description: Maxim�lis mennyis�g
+        explode: true
+        in: query
+        name: quantity
+        required: true
+        schema:
+          format: double
+          type: number
+        style: form
+      - description: M�rt�kegys�g
+        explode: true
+        in: query
+        name: unit
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Product'
+                type: array
+          description: Sikeres lek�rdez�s
+      summary: "Azon term�kek lek�rdez�se, amelyek a megadott m�rt�kegys�get (G, KG,\
+        \ PCS, L, ML) haszn�lj�k �s a param�terk�nt �tadott mennyis�gn�l (pl. 100)\
+        \ kevesebb van bel?l�k rakt�ron."
+      tags:
+      - menu-controller
+      x-accepts: application/json
+components:
+  schemas:
+    Product:
+      description: Term�k
+      example:
+        unit: PCS
+        quantity: 6.027456183070403
+        name: name
+        id: 0
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          description: Term�k neve
+          type: string
+        quantity:
+          description: Rakt�ron l�v? mennyis�g
+          format: double
+          type: number
+        unit:
+          description: M�rt�kegys�g
+          enum:
+          - PCS
+          - KG
+          - G
+          - L
+          - ML
+          type: string
+      type: object
+    Ingredient:
+      description: Hozz�val�k
+      example:
+        recipes:
+        - null
+        - null
+        product:
+          unit: PCS
+          quantity: 6.027456183070403
+          name: name
+          id: 0
+        quantity: 1.4658129805029452
+        id: 6
+      properties:
+        id:
+          format: int64
+          type: integer
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          description: Mennyis�g
+          format: double
+          type: number
+        recipes:
+          items:
+            $ref: '#/components/schemas/Recipe'
+          type: array
+      type: object
+    Menu:
+      description: Men�
+      example:
+        name: name
+        menuItems:
+        - null
+        - null
+        id: 7
+        dayAvailable: MONDAY
+        group:
+          name: name
+          id: 9
+          menus:
+          - null
+          - null
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        group:
+          $ref: '#/components/schemas/MenuGroup'
+        dayAvailable:
+          description: A h�t mely napj�n el�rhet?
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+          type: string
+        menuItems:
+          description: �telek
+          items:
+            $ref: '#/components/schemas/MenuItem'
+          type: array
+      type: object
+    MenuGroup:
+      description: Men� csoportja
+      example:
+        name: name
+        id: 9
+        menus:
+        - null
+        - null
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          description: Csoport elnevez�se
+          type: string
+        menus:
+          items:
+            $ref: '#/components/schemas/Menu'
+          type: array
+      type: object
+    MenuItem:
+      description: �telek
+      example:
+        price: 2
+        name: name
+        recipe: null
+        timesOrdered: 5
+        id: 5
+        menu:
+          name: name
+          menuItems:
+          - null
+          - null
+          id: 7
+          dayAvailable: MONDAY
+          group:
+            name: name
+            id: 9
+            menus:
+            - null
+            - null
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          description: �tel neve
+          type: string
+        timesOrdered:
+          description: H�nyszor rendelt�k az �telt
+          format: int32
+          type: integer
+        price:
+          description: �r
+          format: int32
+          type: integer
+        recipe:
+          $ref: '#/components/schemas/Recipe'
+        menu:
+          $ref: '#/components/schemas/Menu'
+      type: object
+    Recipe:
+      description: Melyik receptb?l k�sz�lt
+      example:
+        name: name
+        menuItems:
+        - price: 2
+          name: name
+          recipe: null
+          timesOrdered: 5
+          id: 5
+          menu:
+            name: name
+            menuItems:
+            - null
+            - null
+            id: 7
+            dayAvailable: MONDAY
+            group:
+              name: name
+              id: 9
+              menus:
+              - null
+              - null
+        - price: 2
+          name: name
+          recipe: null
+          timesOrdered: 5
+          id: 5
+          menu:
+            name: name
+            menuItems:
+            - null
+            - null
+            id: 7
+            dayAvailable: MONDAY
+            group:
+              name: name
+              id: 9
+              menus:
+              - null
+              - null
+        ingredients:
+        - recipes:
+          - null
+          - null
+          product:
+            unit: PCS
+            quantity: 6.027456183070403
+            name: name
+            id: 0
+          quantity: 1.4658129805029452
+          id: 6
+        - recipes:
+          - null
+          - null
+          product:
+            unit: PCS
+            quantity: 6.027456183070403
+            name: name
+            id: 0
+          quantity: 1.4658129805029452
+          id: 6
+        id: 0
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          description: Recept neve
+          type: string
+        ingredients:
+          description: �sszetev?k
+          items:
+            $ref: '#/components/schemas/Ingredient'
+          type: array
+        menuItems:
+          description: Mely �teleket k�sz�tik a recept alapj�n
+          items:
+            $ref: '#/components/schemas/MenuItem'
+          type: array
+      type: object
+  securitySchemes:
+    openid:
+      description: KeyCloak Yokudlela
+      openIdConnectUrl: http://localhost:6080/auth/realms/yokudlela/.well-known/openid-configuration
+      type: openIdConnect
+

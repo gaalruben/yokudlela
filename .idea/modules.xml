@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/market.main.iml" filepath="$PROJECT_DIR$/.idea/modules/market.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/recipe-client.main.iml" filepath="$PROJECT_DIR$/.idea/modules/recipe-client.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/recipes.main.iml" filepath="$PROJECT_DIR$/.idea/modules/recipes.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/yokudlela.iml" filepath="$PROJECT_DIR$/.idea/yokudlela.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/yokudlela.market.main.iml" filepath="$PROJECT_DIR$/.idea/modules/yokudlela.market.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-861802853/yokudlela.recipe-client.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-861802853/yokudlela.recipe-client.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1205294870/yokudlela.recipes.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1205294870/yokudlela.recipes.main.iml" />
     </modules>
   </component>
 </project>

@@ -11,6 +11,7 @@ application {
     mainClass = 'yokudlela.recipes.SpringApplication'
 }
 
+
 group 'yokudlela.recipes'
 version '1.0-SNAPSHOT'
 sourceCompatibility = '11'

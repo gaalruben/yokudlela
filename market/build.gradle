@@ -26,6 +26,7 @@ apply plugin: 'io.freefair.lombok'
 apply plugin: 'idea'
 
 dependencies {
+    implementation project(':recipe-client')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     runtimeOnly 'com.h2database:h2'
@@ -53,6 +54,9 @@ dependencies {
     implementation 'org.keycloak:keycloak-spring-boot-starter:21.1.1'
 }
 
+task prepareKotlinBuildScriptModel {
+
+}
 
 test {
     useJUnitPlatform()

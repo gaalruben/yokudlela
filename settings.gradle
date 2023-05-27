@@ -1,0 +1,3 @@
+rootProject.name = 'yokudlela'
+include 'market', 'recipes', 'recipe-client'
+

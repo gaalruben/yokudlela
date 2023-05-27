@@ -9,7 +9,20 @@
         <option name="gradleJvm" value="corretto-17" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/market" />
+            <option value="$PROJECT_DIR$/recipe-client" />
+            <option value="$PROJECT_DIR$/recipes" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/recipe-client" />
+        <option name="gradleJvm" value="corretto-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/recipe-client" />
           </set>
         </option>
       </GradleProjectSettings>

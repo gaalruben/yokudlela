@@ -1,0 +1,302 @@
+openapi: 3.0.1
+info:
+  title: Yokudlela Recipes/Menus API
+  description: description = "Yokudlela Recipes/Tables API for Graphical User Interface
+    .
+  contact:
+    name: Gaál Ruben
+    email: gaalruben02@gmail.com
+  version: v1
+servers:
+- url: http://localhost:8080/recipe
+  description: local dev
+paths:
+  /menu/add/product:
+    post:
+      tags:
+      - menu-controller
+      summary: Új termék felvitele
+      operationId: addConsumer
+      parameters:
+      - name: name
+        in: query
+        description: Termék neve
+        required: true
+        schema:
+          type: string
+      - name: quantity
+        in: query
+        description: Mennyiség
+        required: true
+        schema:
+          type: number
+          format: double
+      - name: unit
+        in: query
+        description: Mértékegység
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Sikeres felvitel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      security:
+      - openid:
+        - recipe
+  /menu/getRecipesWithNotEnoughResources:
+    get:
+      tags:
+      - menu-controller
+      summary: "Azon receptek lekérdezése, amelyekhez NINCS elegend? alapanyag raktá\
+        ron."
+      operationId: getRecipesWithNotEnoughResources
+      responses:
+        "200":
+          description: Sikeres lekérdezés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+  /menu/getRecipesWithEnoughResources:
+    get:
+      tags:
+      - menu-controller
+      summary: "Azon receptek lekérdezése, amelyekhez VAN elegend? alapanyag raktá\
+        ron."
+      operationId: getRecipesWithEnoughResources
+      responses:
+        "200":
+          description: Sikeres lekérdezés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+  /menu/getMostFrequentlyOrderedMenuItem:
+    get:
+      tags:
+      - menu-controller
+      summary: Legtöbbször rendelt étel lekérdezése.
+      operationId: getMostFrequentlyOrderedMenuItem
+      responses:
+        "200":
+          description: Sikeres lekérdezés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Menu'
+  /menu/getMenusByGroupId:
+    get:
+      tags:
+      - menu-controller
+      summary: "Azon menük lekérdezése, amelyek a paraméterként átadott csoportazonosí\
+        tóval rendelkeznek. (pl. 300, 303 stb)"
+      operationId: getMenusByGroupId
+      parameters:
+      - name: groupId
+        in: query
+        description: Csoportazonosító
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Sikeres lekérdezés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Menu'
+  /menu/getMenusByDayOfWeek:
+    get:
+      tags:
+      - menu-controller
+      summary: "Azon menük lekérdezése, amelyek a paraméterként átadott napon (a hé\
+        t napjai közül) elérhet?ek. pl. MONDAY"
+      operationId: getMenusByDayOfWeek
+      parameters:
+      - name: dayOfWeek
+        in: query
+        description: A hét egy napja angolul
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Sikeres lekérdezés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Menu'
+  /menu/getLowQuantityProducts:
+    get:
+      tags:
+      - menu-controller
+      summary: "Azon termékek lekérdezése, amelyek a megadott mértékegységet (G, KG,\
+        \ PCS, L, ML) használják és a paraméterként átadott mennyiségnél (pl. 100)\
+        \ kevesebb van bel?lük raktáron."
+      operationId: getLowQuantityProducts
+      parameters:
+      - name: quantity
+        in: query
+        description: Maximális mennyiség
+        required: true
+        schema:
+          type: number
+          format: double
+      - name: unit
+        in: query
+        description: Mértékegység
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Sikeres lekérdezés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          description: Termék neve
+        quantity:
+          type: number
+          description: Raktáron lév? mennyiség
+          format: double
+        unit:
+          type: string
+          description: Mértékegység
+          enum:
+          - PCS
+          - KG
+          - G
+          - L
+          - ML
+      description: Termék
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          type: number
+          description: Mennyiség
+          format: double
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recipe'
+      description: Hozzávalók
+    Menu:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        group:
+          $ref: '#/components/schemas/MenuGroup'
+        dayAvailable:
+          type: string
+          description: A hét mely napján elérhet?
+          enum:
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+        menuItems:
+          type: array
+          description: Ételek
+          items:
+            $ref: '#/components/schemas/MenuItem'
+      description: Menü
+    MenuGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          description: Csoport elnevezése
+        menus:
+          type: array
+          items:
+            $ref: '#/components/schemas/Menu'
+      description: Menü csoportja
+    MenuItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          description: Étel neve
+        timesOrdered:
+          type: integer
+          description: Hányszor rendelték az ételt
+          format: int32
+        price:
+          type: integer
+          description: Ár
+          format: int32
+        recipe:
+          $ref: '#/components/schemas/Recipe'
+        menu:
+          $ref: '#/components/schemas/Menu'
+      description: Ételek
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          description: Recept neve
+        ingredients:
+          type: array
+          description: Összetev?k
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        menuItems:
+          type: array
+          description: Mely ételeket készítik a recept alapján
+          items:
+            $ref: '#/components/schemas/MenuItem'
+      description: Melyik receptb?l készült
+  securitySchemes:
+    openid:
+      type: openIdConnect
+      description: KeyCloak Yokudlela
+      openIdConnectUrl: http://localhost:6080/auth/realms/yokudlela/.well-known/openid-configuration
