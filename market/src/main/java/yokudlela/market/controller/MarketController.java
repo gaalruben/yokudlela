@@ -73,7 +73,7 @@ public class MarketController {
             @ApiResponse(responseCode = "200", description = "Sikeres hozzáadás",
             content = { @Content(mediaType = "application/json")})
     })
-    @Operation(summary = "Partnerhez termék felvitele pl. consumerId = 100, productId = 207.")
+    @Operation(summary = "Partnerhez termék felvitele pl. productId = 207, consumerId = 100 .")
     @PostMapping(path = "/addConsumerToProduct", produces = MediaType.APPLICATION_JSON_VALUE)
     void addConsumerToProduct(
             @Parameter(description = "Termék azonosítója, amit fel szeretnénk venni a fogyasztóhoz.", required = true) @RequestParam(name = "productId", required = true)Long productId,

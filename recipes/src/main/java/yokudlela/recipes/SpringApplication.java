@@ -22,14 +22,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 
-/*@SecurityScheme(
+@SecurityScheme(
         type = SecuritySchemeType.APIKEY,
         name = "apikey",
         paramName = "Authorization",
         description = "KeyCloak Yokudlela",
-        in = SecuritySchemeIn.HEADER)*/
-
-/*@SecurityScheme(
+        in = SecuritySchemeIn.HEADER)
+@SecurityScheme(
         type = SecuritySchemeType.OAUTH2,
         name = "oauth2",
         description = "KeyCloak Yokudlela",
@@ -40,8 +39,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
                         + "&response_type=code"
                         + "&scope=openid")
         )
-)*/
-
+)
 @SecurityScheme(
         type = SecuritySchemeType.OPENIDCONNECT,
         name = "openid",
