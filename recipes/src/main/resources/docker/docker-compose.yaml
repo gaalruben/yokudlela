@@ -4,7 +4,7 @@ services:
     image: gaalruben/recipe
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/yokudleladb?allowPublicKeyRetrieval=true&useSSL=false
-      KEYCLOAK_AUTH_SERVER_URL: http://localhost:6080/auth
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:6080/auth
     ports:
       - 8080:8080
     depends_on:
@@ -19,7 +19,7 @@ services:
     image: gaalruben/market
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/yokudleladb?allowPublicKeyRetrieval=true&useSSL=false
-      KEYCLOAK_AUTH_SERVER_URL: http://localhost:6080/auth
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:6080/auth
       CLIENT_MENU: http://recipe:8080/recipe
     ports:
       - 8060:8060

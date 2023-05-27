@@ -10,8 +10,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - yokudlela-net
+    #networks:
+    #  - yokudlela-net
     links:
         - db
 
@@ -28,8 +28,8 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    networks:
-      - yokudlela-net
+    #networks:
+    #  - yokudlela-net
     links:
       - db
       - recipe
@@ -54,8 +54,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    networks:
-      - yokudlela-net
+    #networks:
+    #  - yokudlela-net
 
 
   adminer:
@@ -63,8 +63,8 @@ services:
     restart: always
     ports:
       - 9000:8080
-    networks:
-      - yokudlela-net
+    #networks:
+    #  - yokudlela-net
 
   keycloak:
     image: jboss/keycloak:12.0.4
@@ -88,12 +88,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - yokudlela-net
+   # networks:
+   #   - yokudlela-net
     links:
       - db
 
-networks:
-  yokudlela-net:
-    external:
-      name: yokudlela-net
+#networks:
+#  yokudlela-net:
+#    external:
+#      name: yokudlela-net

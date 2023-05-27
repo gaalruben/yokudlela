@@ -50,7 +50,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 )
 @OpenAPIDefinition(
         servers = {
-                @Server(url = "http://localhost:8080/recipe", description = "local dev")},
+                @Server(url = "http://localhost:8080/recipe", description = "local dev"),
+                @Server(url = "http://recipe:8080/recipe", description = "docker")},
 
         info = @Info(
                 title = "Yokudlela Recipes/Menus API",
