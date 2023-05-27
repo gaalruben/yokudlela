@@ -108,7 +108,7 @@ public class MenuController {
             content = { @Content(mediaType = "application/json",
             schema = @Schema(implementation = Product.class)) })
     })
-    @Operation(summary = "Új termék felvitele", security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
+    @Operation(summary = "Új termék felvitele")
     @PostMapping(path = "/add/product", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product addConsumer(@Parameter(description = "Termék neve",required = true) @RequestParam(required = true) String name,
                                 @Parameter(description = "Mennyiség",required = true) @RequestParam(required = true) double quantity,

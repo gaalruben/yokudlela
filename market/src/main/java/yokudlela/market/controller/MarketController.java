@@ -7,16 +7,19 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import yokudlela.market.model.Consumer;
-import yokudlela.market.model.Product;
-import yokudlela.market.model.Supplier;
-import yokudlela.market.model.SupplierProduct;
+import yokudlela.market.controller.client.RecipeControllerService;
+import yokudlela.market.model.*;
 import yokudlela.market.service.MarketService;
+import yokudlela.recipe.java.clients.api.MenuControllerApi;
+import yokudlela.recipe.java.clients.invoker.ApiClient;
+import yokudlela.recipe.java.clients.invoker.ApiException;
+import yokudlela.recipe.java.clients.invoker.Configuration;
+import yokudlela.recipe.java.clients.model.Recipe;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -24,6 +27,46 @@ import java.util.List;
 public class MarketController {
     @Autowired
     MarketService marketService;
+
+    @Autowired
+    RecipeControllerService menuControllerService;
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sikeres lekérdezés",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Recipe.class))) }),
+    })
+    @Operation(summary = "MENÜ APIból hívva: Azon receptek lekérdezése, amelyekhez NINCS elegendő alapanyag raktáron.")
+    @GetMapping(value = "/getRecipesWithNotEnoughResources", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Recipe> getRecipesWithNotEnoughResources(HttpServletRequest request) throws ApiException {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://recipe:8080/recipe");
+
+        MenuControllerApi api = new MenuControllerApi(defaultClient);
+        System.out.println("----- /getRecipesWithNotEnoughResources CALLED -----");
+        System.out.println("----- BasePath: " + api.getApiClient().getBasePath()  + "-----");
+        //MenuControllerApi api = this.menuControllerService.getClientInstance();
+        List<Recipe> recipes = api.getRecipesWithNotEnoughResources();
+        return recipes;
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sikeres lekérdezés",
+            content = { @Content(mediaType = "application/json",
+            array = @ArraySchema(schema = @Schema(implementation = yokudlela.recipe.java.clients.model.Product.class))) }),
+    })
+    @Operation(summary = "MENÜ APIból hívva: Azon termékek lekérdezése, amelyekből a megadott mennyiségnél kevesebb van raktáron.")
+    @GetMapping(value = "/getLowQuantityProducts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<yokudlela.recipe.java.clients.model.Product> getLowQuantityProducts(
+            @Parameter(description = "Maximális mennyiség", required = true) @RequestParam(name = "quantity", required = true)double quantity,
+            @Parameter(description = "Mértékegység", required = true) @RequestParam(name = "unit", required = true)String unit) throws ApiException {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        defaultClient.setBasePath("http://recipe:8080/recipe");
+        MenuControllerApi api = new MenuControllerApi(defaultClient);
+        //MenuControllerApi api = this.menuControllerService.getClientInstance();
+        List<yokudlela.recipe.java.clients.model.Product> products = api.getLowQuantityProducts(quantity, unit);
+        return products;
+    }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sikeres hozzáadás",
@@ -54,8 +97,7 @@ public class MarketController {
             @ApiResponse(responseCode = "200", description = "Sikeres megrendelés",
             content = { @Content(mediaType = "application/json")})
     })
-    @Operation(summary = "Fogyasztóként termék megrendelése beszállítótól pl. consumerId = 100, supplierProductId = 500.",
-            security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
+    @Operation(summary = "Fogyasztóként termék megrendelése beszállítótól pl. consumerId = 100, supplierProductId = 500.")
     @PostMapping(path = "/orderProductBySupplierProductId", produces = MediaType.APPLICATION_JSON_VALUE)
     void orderProductBySupplierProductId(
             @Parameter(description = "Fogyasztó azonosítója, aki rendelni szeretne", required = true) @RequestParam(name = "consumerId", required = true)Long consumerId,
@@ -81,11 +123,12 @@ public class MarketController {
             content = { @Content(mediaType = "application/json",
             schema = @Schema(implementation = Product.class)) })
     })
-    @Operation(summary = "Új termék felvitele", security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
+    @Operation(summary = "Új termék felvitele")
     @PostMapping(path = "/add/product", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product addProduct(@Parameter(description = "Az új termék",required = true) @RequestBody(required = true) Product product){
-        marketService.createProduct(product);
-        return product;
+    public Product addProduct(@Parameter(description = "Az új termék mértékegysége",required = true)@RequestParam(required = true) String unit){
+        Product p = Product.builder().unit(Unit.valueOf(unit)).build();
+        marketService.createProduct(p);
+        return p;
     }
 
     @ApiResponses(value = {
@@ -93,7 +136,7 @@ public class MarketController {
             content = { @Content(mediaType = "application/json",
             schema = @Schema(implementation = Consumer.class)) })
     })
-    @Operation(summary = "Új partner felvitele", security = {@SecurityRequirement(name = "openid", scopes = {"recipe"})})
+    @Operation(summary = "Új partner felvitele")
     @PostMapping(path = "/add/consumer", produces = MediaType.APPLICATION_JSON_VALUE)
     public Consumer addConsumer(@Parameter(description = "Partner neve",required = true) @RequestParam(required = true) String name,
                                 @Parameter(description = "Partner elérhetősége",required = true) @RequestParam(required = true) String contact){
@@ -109,9 +152,11 @@ public class MarketController {
     })
     @Operation(summary = "Új beszállító felvitele")
     @PostMapping(path = "/add/supplier", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Supplier addConsumer(@Parameter(description = "Az új partner",required = true) @RequestBody(required = true) Supplier supplier){
-        marketService.createSupplier(supplier);
-        return supplier;
+    public Supplier addSupplier(@Parameter(description = "Az új partner",required = true) @RequestParam(required = true) String name,
+                                @Parameter(description = "Az új partner",required = true) @RequestParam(required = true) String contact){
+        Supplier s = Supplier.builder().name(name).contact(contact).build();
+        marketService.createSupplier(s);
+        return s;
     }
 
 }
